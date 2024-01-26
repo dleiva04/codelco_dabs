@@ -1,0 +1,12 @@
+# The main pipeline for codelco_demo
+resources:
+  pipelines:
+    codelco_demo_pipeline:
+      name: codelco_demo_pipeline
+      target: codelco_demo_${bundle.environment}
+      libraries:
+        - notebook:
+            path: ../src/dlt_pipeline.ipynb
+
+      configuration:
+        bundle.sourcePath: /Workspace/${workspace.file_path}/src

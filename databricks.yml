@@ -1,0 +1,40 @@
+# Configuration: https://docs.databricks.com/en/dev-tools/bundles/settings.html#bundle-syntax-custom-variables
+bundle:
+  name: codelco_demo
+  git:
+    origin_url: https://github.com/dleiva04/codelco_demo.git
+    branch: main
+
+include:
+  - resources/*.yml
+
+targets:
+  # The 'dev' target, for development purposes. This target is the default.
+  dev:
+    # We use 'mode: development' to indicate this is a personal development copy:
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default
+    # - The 'development' mode is used for Delta Live Tables pipelines
+    mode: development
+    default: true
+    git:
+      branch: dev
+
+    workspace:
+      host: https://adb-2290419374598257.17.azuredatabricks.net
+
+  # The 'prod' target, used for production deployment.
+  prod:
+    # We use 'mode: production' to indicate this is a production deployment.
+    # Doing so enables strict verification of the settings below.
+    mode: production
+    workspace:
+      host: https://adb-7628792571421202.2.azuredatabricks.net/
+      # We always use /Users/david.leiva@databricks.com for all resources to make sure we only have a single copy.
+      # If this path results in an error, please make sure you have a recent version of the CLI installed.
+      root_path: /Shared/.bundle/${bundle.name}/${bundle.target}
+    run_as:
+      # This runs as david.leiva@databricks.com in production. We could also use a service principal here,
+      # see https://docs.databricks.com/dev-tools/bundles/permissions.html.
+      # service_principal_name: sp-automated
+      user_name: david.leiva@databricks.com
